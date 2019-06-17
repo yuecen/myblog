@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ post.title }}
+{% endblock %}
+
+{% block content %}
+<div class="my-5">
+    <p class="h4 text-secondary">{{ post.title }}</p>
+    <div class="rounded shadow-sm bg-white py-2 px-3">
+        <span class="custom-control custom-switch float-right">
+            <input type="checkbox" class="custom-control-input" id="customSwitch1">
+            <label class="custom-control-label" for="customSwitch1"></label>
+        </span>
+        <button type="button" class="btn-sm btn-warning">Edit</button>
+        <p class="text-right">
+
+            {% load tz %}
+            {% localtime on %}
+            <em class="text-muted"><small>{{ post.created|localtime|date:'M d, Y H:i' }}</small></em>
+            {% endlocaltime %}
+        </p>
+        <div class="markdown-body">
+            <div class="desc"><pre>{{ post.description }}</pre></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let items = document.getElementsByClassName('desc');
+    for (let item of items) {
+        item.innerHTML = marked(item.innerText);
+    };
+</script>
+{% endblock %}

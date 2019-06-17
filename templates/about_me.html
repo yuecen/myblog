@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    About Me
+{% endblock %}
+
+{% block content %}
+<div style="max-width: 200px;">
+    <div class="markdown-body">
+        <div class="desc"><pre>{{ object.bio }}</pre></div>
+    </div>
+</div>
+
+<script>
+    let items = document.getElementsByClassName('desc');
+    for (let item of items) {
+        item.innerHTML = marked(item.innerText);
+    };
+</script>
+{% endblock %}

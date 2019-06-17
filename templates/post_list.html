@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{% if request.resolver_match.url_name == 'blog_list' %}
+    Blog
+{% endif %}
+{% if request.resolver_match.url_name == 'roundup_list' %}
+    Roundup
+{% endif %}
+{% endblock %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+    {% include 'post_add.html' %}
+{% endif %}
+{% for post in post_list %}
+    <div class="my-5">
+        <p class="h4"><a href="/{{ post.category.category_code }}/{{ post.slug }}/">{{ post.title }}</a></p>
+        <div class="rounded shadow-sm bg-white py-2 px-3">
+            <p class="text-right">
+                {% load tz %}
+                {% localtime on %}
+                <em class="text-muted"><small>{{ post.created|localtime|date:'M d, Y H:i' }}</small></em>
+                {% endlocaltime %}
+            </p>
+            <div class="markdown-body">
+                <div class="desc"><pre>{{ post.description }}</pre></div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+<div class="text-center my-5">
+    <span class="step-links">
+        {% if post_list.has_previous %}
+            <a href="?page=1">&laquo; first</a> |
+            <a href="?page={{ post_list.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ post_list.number }} of {{ post_list.paginator.num_pages }}.
+        </span>
+
+        {% if post_list.has_next %}
+            <a href="?page={{ post_list.next_page_number }}">next</a> |
+            <a href="?page={{ post_list.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+<script>
+    let items = document.getElementsByClassName('desc');
+    for (let item of items) {
+        item.innerHTML = marked(item.innerText);
+    };
+</script>
+{% endblock %}
